@@ -1,0 +1,29 @@
+name: Deploy to Amazon S3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: YOUR_IAM_ROLE_ARN
+          aws-region: ap-south-1
+
+      - name: Upload files to S3
+        run: |
+          aws s3 sync .
+     s3://yashu-projectyy-assets-2026
