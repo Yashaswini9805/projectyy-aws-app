@@ -29,16 +29,16 @@ VPC · IAM · EC2 · Auto Scaling · Application Load Balancer · RDS (MySQL) ·
 
 Custom VPC (`10.0.0.0/16`) spanning 2 Availability Zones, with public subnets for the load balancer/app tier and private subnets isolating the database.
 
-![VPC Overview](screenshots/01-vpc-overview.png)
-![VPC Details](screenshots/02-vpc-details.png)
-![Subnets](screenshots/03-subnets.png)
-![Internet Gateway Attached](screenshots/04-internet-gateway.png)
+![VPC Overview](Screenshots/01-vpc-overview.png.jpeg)
+![VPC Details](Screenshots/02-vpc-details.png.jpeg)
+![Subnets](Screenshots/03-subnets.png.jpeg)
+![Internet Gateway Attached](Screenshots/04-internet-gateway.png.jpeg)
 
 ## 2. Route Tables
 
 Public subnets route `0.0.0.0/0` traffic through the Internet Gateway; private subnets have no such route, making them unreachable from the internet by design.
 
-![Route Tables](screenshots/05-route-tables.png)
+![Route Tables](Screenshots/05-route-tables.png.jpeg)
 
 ## 3. Security Groups
 
@@ -50,15 +50,15 @@ A layered access chain — nothing skips a tier:
 | `ec2-sg` | HTTP 80 from `alb-sg` | App servers only accept traffic that passed through the ALB |
 | `rds-sg` | MySQL 3306 from `ec2-sg` | Database only accepts traffic from app servers — nothing else |
 
-![Security Groups](screenshots/06-security-groups.png)
+![Security Groups](Screenshots/06-security-groups.png.jpeg)
 
 ## 4. IAM — Least-Privilege Access
 
 EC2 instances use an IAM role (not hardcoded credentials) scoped to only what they need: read/write on one specific S3 bucket, plus SSM for remote management.
 
-![EC2 IAM Role Permissions](screenshots/07-iam-ec2-role.png)
-![IAM Roles List](screenshots/08-iam-roles-list.png)
-![IAM Policy Created](screenshots/09-iam-policy.png)
+![EC2 IAM Role Permissions](Screenshots/07-iam-ec2-role.png.jpeg)
+![IAM Roles List](Screenshots/08-iam-roles-list.png.jpeg)
+![IAM Policy Created](Screenshots/09-iam-policy.png.jpeg)
 
 ## 5. Compute — Auto Scaling Group + Load Balancer
 
@@ -66,37 +66,37 @@ The Application Load Balancer distributes traffic across EC2 instances managed b
 
 **Live proof — the deployed application responding through the load balancer:**
 
-![ALB Serving Traffic](screenshots/10-alb-hello-world.png)
+![ALB Serving Traffic](Screenshots/10-alb-hello-world.png.jpeg)
 
 ## 6. Database — RDS (Private, Single-AZ)
 
 MySQL database with zero public exposure — accessible only from the app tier via `rds-sg`.
 
-![RDS Dashboard](screenshots/11-rds-dashboard.png)
-![RDS Instance Summary](screenshots/12-rds-summary.png)
-![RDS Connectivity — Security Group](screenshots/13-rds-connectivity.png)
-![Successful Connection via Session Manager](screenshots/14-rds-session-manager.png)
-![RDS Manual Snapshot](screenshots/15-rds-snapshot.png)
+![RDS Dashboard](Screenshots/11-rds-dashboard.png.jpeg)
+![RDS Instance Summary](Screenshots/12-rds-summary.png.jpeg)
+![RDS Connectivity — Security Group](Screenshots/13-rds-connectivity.png.jpeg)
+![Successful Connection via Session Manager](Screenshots/14-rds-session-manager.png.jpeg)
+![RDS Manual Snapshot](Screenshots/15-rds-snapshot.png.jpeg)
 
 ## 7. Storage — S3 with Lifecycle Policy
 
 Private S3 bucket (Block Public Access enabled) with a lifecycle rule transitioning objects to Glacier after 30 days for cost optimization.
 
-![S3 Object](screenshots/16-s3-object.png)
-![S3 Lifecycle Rule](screenshots/17-s3-lifecycle.png)
+![S3 Object](Screenshots/16-s3-object.png.jpeg)
+![S3 Lifecycle Rule](Screenshots/17-s3-lifecycle.png.jpeg)
 
 ## 8. Monitoring — CloudWatch + SNS
 
 CloudWatch alarms on CPU utilization and unhealthy host count, notifying via SNS email on trigger.
 
-![CloudWatch Alarms](screenshots/18-cloudwatch-alarms.png)
+![CloudWatch Alarms](Screenshots/18-cloudwatch-alarms.png.jpeg)
 
 ## 9. CI/CD — GitHub Actions
 
 Pushing to `main` automatically deploys to the EC2 Auto Scaling Group via AWS Systems Manager, using scoped IAM credentials stored as encrypted GitHub secrets.
 
-![GitHub Actions Successful Run](screenshots/19-github-actions-success.png)
-![Deploy Workflow File](screenshots/20-deploy-yml.png)
+![GitHub Actions Successful Run](Screenshots/19-github-actions-success.png.jpeg)
+![Deploy Workflow File](Screenshots/20-deploy-yml.png.jpeg)
 
 ---
 
